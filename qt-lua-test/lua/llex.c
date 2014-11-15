@@ -334,7 +334,7 @@ static int readdecesc (LexState *ls) {
     r = 10*r + c[i] - '0';
     next(ls);
   }
-  if (r > UCHAR_MAX)
+  if (r > (int)UCHAR_MAX)
     escerror(ls, c, i, "decimal escape too large");
   return r;
 }
