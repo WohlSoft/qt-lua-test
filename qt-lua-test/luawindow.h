@@ -2,7 +2,8 @@
 #define LUAWINDOW_H
 
 #include <QMainWindow>
-#include "lua/lua.hpp"
+
+#include "oolua/include/oolua.h"
 
 namespace Ui {
 class LuaWindow;
@@ -15,7 +16,6 @@ class LuaWindow : public QMainWindow
 public:
     explicit LuaWindow(QWidget *parent = 0);
     ~LuaWindow();
-    static int MsgBox(lua_State *L);
 
 private slots:
     void on_browseButton_clicked();
@@ -25,13 +25,13 @@ private slots:
     void on_RunLuaFile_clicked();
 
 private:
-    lua_State* L;
+    OOLUA::Script* luavm;
     bool isActiveState()
     {
-        return L != NULL;
+        return luavm != NULL;
     }
     void updateButtonState();
-    void luaError(lua_State **L);
+    void luaError();
 
     Ui::LuaWindow *ui;
 };
