@@ -425,6 +425,9 @@
 #define lua_strx2number(s,p)	strtod((s), (p))
 #endif
 
+#if !defined(getlocaledecpoint)
+#define getlocaledecpoint() ('.') //Code-monkey style
+#endif
 
 /*
 @@ The luai_num* macros define the primitive operations over numbers.
