@@ -761,3 +761,8 @@ union luai_Cast { double l_d; long l_l; };
 
 #endif
 
+#ifdef __ANDROID__
+    #if !defined(getlocaledecpoint)
+    #define getlocaledecpoint() ('.') //Code-monkey style
+    #endif
+#endif

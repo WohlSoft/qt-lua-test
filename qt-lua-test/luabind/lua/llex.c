@@ -178,9 +178,14 @@ static void buffreplace (LexState *ls, char from, char to) {
 
 static void trydecpoint (LexState *ls, SemInfo *seminfo) {
   /* format error: try to update decimal point separator */
-  struct lconv *cv = localeconv();
   char old = ls->decpoint;
+  #ifdef __ANDROID__
+  ls->decpoint = '.';
+  #else
+  struct lconv *cv = localeconv();
   ls->decpoint = (cv ? cv->decimal_point[0] : '.');
+  #endif
+
   buffreplace(ls, old, ls->decpoint);  /* try updated decimal separator */
   if (!luaO_str2d(luaZ_buffer(ls->buff), &seminfo->r)) {
     /* format error with correct decimal point: no more options */
@@ -310,7 +315,7 @@ static void read_string (LexState *ls, int del, SemInfo *seminfo) {
                 c = 10*c + (ls->current-'0');
                 next(ls);
               } while (++i<3 && isdigit(ls->current));
-              if (c > UCHAR_MAX)
+              if ((unsigned)c > UCHAR_MAX)
                 luaX_lexerror(ls, "escape sequence too large", TK_STRING);
               save(ls, c);
             }
