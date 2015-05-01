@@ -4,13 +4,10 @@
 #include <QMessageBox>
 
 
-using namespace OOLUA;
 void MsgBox(const char* text)
 {
     QMessageBox::information(NULL, "A message from Lua", text);
 }
-OOLUA_CFUNC(MsgBox, MsgBox_l);
-
 
 
 LuaWindow::LuaWindow(QWidget *parent) :
@@ -22,9 +19,10 @@ LuaWindow::LuaWindow(QWidget *parent) :
 
 LuaWindow::~LuaWindow()
 {
-    delete luavm;
+    lua_close(luaStt);
     delete ui;
 }
+
 
 
 
@@ -41,12 +39,16 @@ void LuaWindow::on_browseButton_clicked()
 
 void LuaWindow::on_LoadLuaFile_clicked()
 {
-    luavm = new OOLUA::Script();
-    OOLUA::set_global(luavm->state(), "MsgBox", MsgBox_l);
-    if(!OOLUA::run_file(luavm->state(), ui->luaCodepath->text().toStdString())){
+    this->luaStt = luaL_newstate();
+    luabind::open(this->luaStt);
+    luabind::module(this->luaStt) [
+        luabind::def("MsgBox", MsgBox)
+      ];
+
+    if(!luaL_loadfile(this->luaStt, ui->luaCodepath->text().toLocal8Bit().data()))
+    {
         luaError();
     }
-
     updateButtonState();
 }
 
@@ -54,11 +56,10 @@ void LuaWindow::on_RunLuaFile_clicked()
 {
     if(!isActiveState())
         return;
-
-    if(!luavm->call("run")){
-        luaError();
-    }
-
+    luaL_dostring(
+        this->luaStt,
+        "run()\n"
+      );
     updateButtonState();
 }
 
@@ -70,7 +71,6 @@ void LuaWindow::updateButtonState()
 
 void LuaWindow::luaError()
 {
-    QMessageBox::warning(this, "Error", QString(OOLUA::get_last_error(luavm->state()).c_str()));
-    delete luavm;
-    luavm = NULL;
+    QMessageBox::warning(this, "Error", QString(lua_error(luaStt)));
+    lua_close(luaStt);
 }

@@ -6,9 +6,15 @@ CONFIG += staticlib
 CONFIG -= qt
 
 CONFIG += C++11
-DEFINES += LIBLUABIND
+DEFINES += _LIBLUABIND
 
-INCLUDEPATH += $$PWD/../boost/ $$PWD/../ $$PWD/../lua/ $$PWD/../luajit
+unix:{
+DEFINES += LUA_USE_LINUX
+}
+
+DESTDIR = $$PWD/../../luabind_lib
+
+INCLUDEPATH += $$PWD/../boost/ $$PWD/../ $$PWD/../lua/
 
 SOURCES += \
     ../src/class.cpp \
@@ -54,8 +60,6 @@ SOURCES += \
     ../lua/ltable.c \
     ../lua/ltablib.c \
     ../lua/ltm.c \
-    ../lua/lua.c \
-    ../lua/luac.c \
     ../lua/lundump.c \
     ../lua/lvm.c \
     ../lua/lzio.c \

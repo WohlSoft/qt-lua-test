@@ -2,8 +2,13 @@
 #define LUAWINDOW_H
 
 #include <QMainWindow>
-
-#include "oolua/include/oolua.h"
+extern "C" {
+#include <lua.h>
+}
+#include <luabind/luabind.hpp>
+#include <luabind/function.hpp>
+#include <luabind/class.hpp>
+#include <luabind/detail/call_function.hpp>
 
 namespace Ui {
 class LuaWindow;
@@ -25,10 +30,10 @@ private slots:
     void on_RunLuaFile_clicked();
 
 private:
-    OOLUA::Script* luavm;
+    lua_State *luaStt;
     bool isActiveState()
     {
-        return luavm != NULL;
+        return luaStt != NULL;
     }
     void updateButtonState();
     void luaError();
