@@ -24,16 +24,12 @@
 #ifndef LUABIND_CLASS_REP_HPP_INCLUDED
 #define LUABIND_CLASS_REP_HPP_INCLUDED
 
-#include <boost/limits.hpp>
-#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
-
 #include <string>
 #include <utility>
 #include <vector>
 
 #include <luabind/config.hpp>
 #include <luabind/lua_include.hpp>
-#include <luabind/detail/object_rep.hpp>
 #include <luabind/detail/garbage_collector.hpp>
 #include <luabind/detail/operator_id.hpp>
 #include <luabind/detail/class_registry.hpp>
@@ -151,6 +147,9 @@ namespace luabind { namespace detail
 
 	private:
 
+		// Code common to both constructors
+		void shared_init(lua_State * L);
+
 		void cache_operators(lua_State*);
 
 		// this is a pointer to the type_info structure for
@@ -211,3 +210,4 @@ namespace luabind { namespace detail
 //#include <luabind/detail/overload_rep_impl.hpp>
 
 #endif // LUABIND_CLASS_REP_HPP_INCLUDED
+

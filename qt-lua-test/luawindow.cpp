@@ -18,6 +18,7 @@ LuaWindow::LuaWindow(QWidget *parent) :
     ui(new Ui::LuaWindow)
 {
     ui->setupUi(this);
+    ui->libname->setText("luabind-deboosted");
 }
 
 LuaWindow::~LuaWindow()
@@ -64,11 +65,8 @@ void LuaWindow::on_RunLuaFile_clicked()
     try{
         luabind::call_function<void>(this->luaStt, "run");
     }catch(luabind::error& e){
-        luabind::object error_msg(luabind::from_stack(e.state(), -1));
-        QMessageBox::information(this, "Error", luabind::object_cast<const char*>(error_msg));
+        QMessageBox::information(this, "Error", e.what());
     }
-
-
 
     updateButtonState();
 }

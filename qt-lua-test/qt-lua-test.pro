@@ -11,12 +11,14 @@ QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-ignored-qualifiers
 TARGET = qt-lua-test
 TEMPLATE = app
 CONFIG += static
+CONFIG += C++11
 
-INCLUDEPATH += $$PWD/luabind $$PWD/luabind/boost $$PWD/luabind/lua
+INCLUDEPATH += $$PWD/luabind $$PWD/luabind/lua
 LIBS += -L$$PWD/luabind_lib/ -lluabind
 SOURCES += main.cpp\
         luawindow.cpp
 
-HEADERS  += luawindow.h
+HEADERS  += luawindow.h \
+    luabind/___unused.h
 
 FORMS    += luawindow.ui
